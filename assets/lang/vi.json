@@ -1,0 +1,12 @@
+{
+  "home_title": "Ứng dụng thời tiết",
+  "home_sevenDay": "7 Ngày",
+  "chooseCity_title": "Chọn thành phố",
+  "chooseCity_enterCity": "Nhập tên thành phố",
+  "chooseCity_error_cityRequired": "Tên thành phố không được để trống",
+  "chooseCity_error_cityUnique": "Thành phố đã được thêm, vui lòng chọn thành phố khác",
+  "cancel": "Huỷ",
+  "accept": "Đồng ý",
+  "lang_en": "English",
+  "lang_vi": "Vietnamese"
+}
