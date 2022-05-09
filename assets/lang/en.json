@@ -1,10 +1,15 @@
 {
   "home_title": "Weather application",
-  "home_sevenDay": "7 Days",
+  "home_sevenDay": "6 Days",
   "chooseCity_title": "Choose the city",
+  "home_language": "Change the language",
+  "home_visibility": "Visibility",
+  "home_wind": "Wind",
+  "home_humidity": "Humidity",
   "chooseCity_enterCity": "Enter the name city",
   "cancel": "Cancel",
   "accept": "Accept",
+  "error_fetching": "Fetch data error, please try again",
   "lang_en": "Tiếng Anh",
   "lang_vi": "Tiếng Việt"
 }

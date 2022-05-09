@@ -1,22 +1,37 @@
 import 'package:uuid/uuid.dart';
 
 class CityModel {
-  String id = "";
-  final String nameCity;
-  final String nameCitySlug;
-
-  CityModel({required this.nameCity, required this.nameCitySlug}) {
+  CityModel({
+    this.nameCity,
+    this.nameCitySlug,
+  }) {
     this.id = Uuid().v4();
   }
 
-  CityModel.fromDb({required this.id, required this.nameCity, required this.nameCitySlug}) {}
-
-  Map<String, dynamic> toMap() {
-    return {'id': id, 'name_city': nameCity, 'name_city_slug': nameCitySlug};
+  CityModel.fromJson(dynamic json) {
+    id = json['id'];
+    nameCity = json['name_city'];
+    nameCitySlug = json['name_city_slug'];
   }
 
-  @override
-  String toString() {
-    return 'CityModel{id: $id, name_city: $nameCity, name_city_slug: $nameCitySlug}';
+  late String id;
+  String? nameCity;
+  String? nameCitySlug;
+
+  CityModel copyWith({
+    String? nameCity,
+    String? nameCitySlug,
+  }) =>
+      CityModel(
+        nameCity: nameCity ?? this.nameCity,
+        nameCitySlug: nameCitySlug ?? this.nameCitySlug,
+      );
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = id;
+    map['name_city'] = nameCity;
+    map['name_city_slug'] = nameCitySlug;
+    return map;
   }
 }

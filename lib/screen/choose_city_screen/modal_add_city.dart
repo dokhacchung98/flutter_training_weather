@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_weather/bloc/city_bloc.dart';
+import 'package:flutter_weather/bloc/city_event.dart';
+import 'package:flutter_weather/common/style_text.dart';
 import 'package:flutter_weather/localization/app_localizations.dart';
 import 'package:flutter_weather/model/city_model.dart';
 import 'package:slugify/slugify.dart';
 
 class ModalAddCity extends StatefulWidget {
-  ModalAddCity({Key? key, required this.listCityExist, this.reloadListCity})
-      : super(key: key);
+  ModalAddCity({Key? key, required this.listCityExist}) : super(key: key);
 
   final List<CityModel> listCityExist;
-  VoidCallback? reloadListCity;
 
   @override
   State<ModalAddCity> createState() => _ModalAddCityState();
@@ -34,10 +36,9 @@ class _ModalAddCityState extends State<ModalAddCity> {
       });
       return;
     }
+    BlocProvider.of<CityBloc>(context).add(AddNewCityEvent(CityModel(
+        nameCity: myController.text.trim(), nameCitySlug: _valueOfCity)));
 
-    if (widget.reloadListCity != null) {
-      widget.reloadListCity!();
-    }
     setState(() {
       _messageOfError = "";
     });
@@ -46,7 +47,10 @@ class _ModalAddCityState extends State<ModalAddCity> {
 
   bool _checkCityIsExist(String cityName) {
     return widget.listCityExist
-        .every((element) => element.nameCitySlug == cityName);
+            .firstWhere((element) => element.nameCitySlug == cityName,
+                orElse: () => CityModel())
+            .nameCity !=
+        null;
   }
 
   @override
@@ -54,7 +58,6 @@ class _ModalAddCityState extends State<ModalAddCity> {
     return SingleChildScrollView(
       child: Container(
         height: 200,
-        color: Colors.white,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
@@ -63,7 +66,9 @@ class _ModalAddCityState extends State<ModalAddCity> {
             children: <Widget>[
               Text(
                 AppLocalizations.of(context)!.translate("chooseCity_enterCity"),
+                style: StyleTextConstant.styleTextCitySmall,
               ),
+              SizedBox(height: 12,),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 0),

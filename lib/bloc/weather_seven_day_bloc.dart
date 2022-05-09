@@ -1,17 +1,21 @@
 import 'dart:async';
 
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_weather/bloc/city_bloc.dart';
 import 'package:flutter_weather/bloc/city_state.dart';
 import 'package:flutter_weather/bloc/language_bloc.dart';
 import 'package:flutter_weather/bloc/language_state.dart';
-import 'package:flutter_weather/bloc/weather-event.dart';
-import 'package:flutter_weather/bloc/weather_state.dart';
-import 'package:flutter_weather/model/current_weather_model.dart';
+import 'package:flutter_weather/model/weather_seven_day_model.dart';
 import 'package:flutter_weather/repository/weather_repository.dart';
+import 'package:meta/meta.dart';
 
-class WeatherBLoC extends Bloc<WeatherEvent, WeatherState> {
+part 'weather_seven_day_event.dart';
+part 'weather_seven_day_state.dart';
+
+class WeatherSevenDayBloc
+    extends Bloc<WeatherSevenDayEvent, WeatherSevenDayState> {
   final WeatherRepository? weatherRepository;
   final CityBloc cityBloc;
   final LanguageBloc languageBloc;
@@ -19,11 +23,11 @@ class WeatherBLoC extends Bloc<WeatherEvent, WeatherState> {
   late StreamSubscription _cityStreamSubscription;
   late StreamSubscription _langStreamSubscription;
 
-  WeatherBLoC(this.weatherRepository, this.cityBloc, this.languageBloc)
-      : super(FetchingWeatherState()) {
+  WeatherSevenDayBloc(this.weatherRepository, this.cityBloc, this.languageBloc)
+      : super(WeatherSevenDayInitialState()) {
     _cityStreamSubscription = cityBloc.stream.listen((state) {
       if (state is ChangeListCitiesOrCurrentCityState) {
-        add(WeatherStartFetchDataEvent(
+        add(GetSevenDayWeatherEvent(
             state.currentCityModel.nameCity!, languageBloc.state.lang));
       }
     });
@@ -32,28 +36,23 @@ class WeatherBLoC extends Bloc<WeatherEvent, WeatherState> {
       if (state is LanguageChangeState &&
           cityBloc.state.currentCityModel.nameCity != null &&
           !cityBloc.state.currentCityModel.nameCity!.isEmpty) {
-        add(WeatherStartFetchDataEvent(
+        add(GetSevenDayWeatherEvent(
             cityBloc.state.currentCityModel.nameCity!, state.lang));
       }
     });
-
-    on<WeatherStartFetchDataEvent>(_onStartFetchDataEvent);
+    on<GetSevenDayWeatherEvent>(_onStartFetchWeatherSevenDay);
   }
 
-  Future _onStartFetchDataEvent(
-      WeatherStartFetchDataEvent event, Emitter<WeatherState> emitter) async {
+  Future _onStartFetchWeatherSevenDay(GetSevenDayWeatherEvent event,
+      Emitter<WeatherSevenDayState> emitter) async {
     try {
       if (weatherRepository == null) return;
-      CurrentWeatherModel? res = await weatherRepository!
-          .getWeatherCurrentDay(event.country, lang: event.lang);
-      if (res != null) {
-        emitter(WeatherFetchSuccessState(res));
-      } else {
-        throw 'Exception casting json to model';
-      }
+      emitter(WeatherSevenFetching());
+      List<WeatherSevenDayModel> listWeatherSevenDay = await weatherRepository!
+          .getWeather7Days(event.cityName, lang: event.lang);
+      emitter(WeatherSevenDayFetchSuccessState(listWeatherSevenDay));
     } catch (err) {
-      debugPrint("WeatherBLoc _onStartFetchDataEvent error $err");
-      emitter(WeatherFetchErrorState('err'));
+      emitter(WeatherSevenDayFetchFaildState(err.toString()));
     }
   }
 }

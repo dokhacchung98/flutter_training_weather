@@ -6,11 +6,11 @@ class ClientApi {
   static late final ClientApi _instance;
 
   ClientApi._internal() {
-    client ??= Client();
+    client = Client();
     _instance = this;
   }
 
   factory ClientApi() {
-    return _instance ?? ClientApi._internal();
+    return ClientApi._internal();
   }
 }
