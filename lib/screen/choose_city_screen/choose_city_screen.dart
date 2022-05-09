@@ -34,6 +34,7 @@ class ChooseCityScreen extends StatelessWidget {
     if (cityModel.id != currentCityModel.id) {
       _cityBloc.add(ChangeCurrentCityEvent(cityModel));
     }
+    Navigator.pop(_buildContext!);
   }
 
   @override

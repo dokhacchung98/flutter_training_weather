@@ -56,10 +56,10 @@ class _ModalAddCityState extends State<ModalAddCity> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
-        height: 200,
+      child: Padding(
+        padding: MediaQuery.of(context).viewInsets,
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -68,14 +68,15 @@ class _ModalAddCityState extends State<ModalAddCity> {
                 AppLocalizations.of(context)!.translate("chooseCity_enterCity"),
                 style: StyleTextConstant.styleTextCitySmall,
               ),
-              SizedBox(height: 12,),
+              SizedBox(
+                height: 12,
+              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                 child: TextField(
                   controller: myController,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
                     hintText: 'Ha noi...',
                     errorText: _messageOfError.isEmpty ? null : _messageOfError,
                   ),
@@ -85,17 +86,24 @@ class _ModalAddCityState extends State<ModalAddCity> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
+                  Expanded(
+                    flex: 1,
+                    child: ElevatedButton(
+                        child: Text(
+                            AppLocalizations.of(context)!.translate("cancel")),
+                        onPressed: () => Navigator.pop(context),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.grey))),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    flex: 1,
+                    child: ElevatedButton(
                       child: Text(
-                          AppLocalizations.of(context)!.translate("cancel")),
-                      onPressed: () => Navigator.pop(context),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.grey))),
-                  ElevatedButton(
-                    child:
-                        Text(AppLocalizations.of(context)!.translate("accept")),
-                    onPressed: _handleAddNewCity,
+                          AppLocalizations.of(context)!.translate("accept")),
+                      onPressed: _handleAddNewCity,
+                    ),
                   )
                 ],
               ),

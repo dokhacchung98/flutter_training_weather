@@ -124,8 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     TextSpan(
-                                      text: state.currentCityModel.nameCity!
-                                          .toUpperCase(),
+                                      text: state.currentCityModel.nameCity
+                                          ?.toUpperCase(),
                                       style:
                                           StyleTextConstant.styleTextCityLarge,
                                     ),
